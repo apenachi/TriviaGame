@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Trivia Game</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" href="assets/css/style.css">
+	<style type="text/css">
+		td:hover {
+			background-color: #cfa;
+		}
+
+		.blink {
+				color: #fff;
+				-webkit-animation: change 10s infinite; /* Chrome, Safari, Opera */
+				animation: change 10s infinite;
+		}	
+		@-webkit-keyframes change {
+			from {
+				color: #fff;
+				background-color: #FF0066;
+			}
+			to {
+				color: red;
+				background-color: pink;
+			}
+		}
+		@-webkit-keyframes change {
+			from {
+				color: #fff;
+				background-color: #FF0066;
+			}
+			to {
+				color: red;
+				background-color: pink;
+			}
+		}
+		@keyframes change {
+			from {
+				color: #fff;
+				background-color: #FF0066;
+			}
+			to {
+				color: red;
+				background-color: pink;
+			}
+		}
+		@keyframes change {
+			from {
+				color: #fff;
+				background-color: #FF0066;
+			}
+			to {
+				color: red;
+				background-color: pink;
+			}
+		}
+
+	</style>
+</head>
+<body>
+<div class="container">
+	<section class="panel panel-success page-header text-center">
+		<header class="panel-heading">
+			<h1 class="text-center">Trivia Game <small>Challenge ....</small></h1>
+		</header>
+		<article class="panel-body trivia">
+			<h2 class="time blink text-center">Time Remaining: 5</h2>
+			<table class="table table-hover">
+				<thead id="question">
+<!-- 				<tr>
+						<th>ok</th>
+					</tr> -->
+				</thead>
+				<tbody id="options">
+<!-- 				<tr>
+						<td>Option 1</td>
+					</tr>
+					<tr>
+						<td>Option 2</td>
+					</tr>
+					<tr>
+						<td>Option 3</td>
+					</tr> -->
+				</tbody>
+			</table>
+		</article>
+		<br>
+		<button type="button" class="btn btn-success btn-large start">Trivia Game </button>
+	</section>
+	<footer>
+<!-- 	<iframe src="http://giphy.com/embed/l0K4gl3QvnIjoy0Tu" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+		<video width="320" height="240" src="assets/images/IndependenceDay.mp4">
+			Your browser does not support the video tag.
+		</video>
+ -->	</footer>
+		
+	</div>
+
+	<script type="text/javascript">
+		var triviaQuestions = [{
+			question: 'What is Git',
+			options : ['A version control system', 'A Cloud Service', 'Name of my laptop'],
+			answer : 'A version control system'
+		},
+		{
+			question: 'What is GitHub',
+			options : ['Cloud storage server', 'The name of my boat', 'A boardgame'],
+			answer : 'Cloud storage server'
+		},
+		{
+			question: 'Who won 2016 NBA Championship',
+			options : ['Golden State Warriors', 'Cleveland Cavaliers', 'New Yorks Nicks', 'They tied'],
+			answer : 'Golden State Warriors'
+		}];
+		var currentTriviaQuestion = 0;
+		var rightAnswer;
+		var time;
+		var timer;
+		// var lose = $('<iframe src="http//giphy.com/embed/oxW9IXKWP2Ouk" width="480" height="489" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="http://giphy.com/gifs/cheer-cheering-oxW9IXKWP2Ouk">via GIPHY</a></p>');
+		var win = $('<iframe src="http://giphy.com/embed/l0K4gl3QvnIjoy0Tu" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>');
+		var outOfTime = $('<iframe src="http://giphy.com/embed/sQpl7yebgk3Pq" width="480" height="356" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>');
+		$(document).ready(function() {
+			$('.trivia').hide();
+			$('.start').show();
+			$('.start').on('click', function() {
+				start();
+			});
+
+		
+		function start(){
+			time = 5;
+			$('.time').html('Time Remaining: ' + time);
+			$('.trivia').show();
+			$('.start').hide();
+			askQuestion(triviaQuestions[currentTriviaQuestion]);
+			rightAnswer = triviaQuestions[currentTriviaQuestion].answer;
+			console.log('rightAnswer ' + triviaQuestions[currentTriviaQuestion].answer);
+			console.log('currentTriviaQuestion ' + currentTriviaQuestion);
+			timer = setInterval(countDown, 1000);
+			$('.option').on('click', '.op', function(){
+				var userAnswer = $(this).text();
+				console.log('inside : ' + userAnswer);
+				var right = checkAnswer(triviaQuestions[currentTriviaQuestion], userAnswer);
+				if (right) {
+
+				} else {
+
+				}
+			});
+		};
+
+		function countDown(){
+			time --;
+			$('.time').html('Time Remaining: ' + time);
+			console.log('Time Remaining: ' + time);
+			if (time === 0) {
+				stop();
+				reset();
+			};
+		};
+
+		function reset() {
+			console.log('Time\'s Up!');
+			$('.blink').removeClass('blink');
+			$('#question').html('<tr><th class="text-center"><h3>Out of time !!!</h3></th></tr>');
+			console.log('rightAnswer ' + rightAnswer)
+			$('#options').empty();
+			var option = $('<tr class="option" ><td class="op"><h4>The correct answer was: ' + rightAnswer + '</h4></td></tr>');
+			$('#options').append(option);
+			$('#options').append(outOfTime);
+
+			setTimeout(function(){
+				$('#question').empty();
+				$('#options').empty();
+				currentTriviaQuestion ++;
+				// askQuestion(triviaQuestions[currentTriviaQuestion]);
+				start();
+			}, 3 * 1000);
+		};
+
+		function stop(){
+			clearInterval(timer);
+		};
+
+		function askQuestion(question) {
+			$('#question').html('<tr><th class="text-center"><h3>' + question.question + '?</h3></th></tr>');
+			var options = $('#options');
+			for (var i = 0;  i < question.options.length ; i++) {
+				var option = $('<tr class="option" ><td class="op"><h4>' + question.options[i] + '</h4></td></tr>');
+				options.append(option);
+				console.log(question.options[i]);
+			};
+			console.log('askQuestion');
+		};
+
+		function checkAnswer(question, userAnswer) {
+			console.log('checking answer ' + question.answer + ' - ' + userAnswer);
+			stop();
+			if (question.answer === userAnswer) {
+				console.log('true');
+				return true;
+			} else {
+				console.log('false');
+				return false;
+			}
+		};
+
+	});
+
+	</script>
+</body>
+</html>
